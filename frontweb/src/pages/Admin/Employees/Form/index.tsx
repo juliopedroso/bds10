@@ -1,17 +1,20 @@
 import './styles.css';
-
+import { useHistory } from 'react-router-dom';
 const Form = () => {
 
+  const history = useHistory();
   const handleCancel = () => {
-    // to do
-  };
+    history.push("/admin/employees");
 
+
+  };
+  
   return (
     <div className="employee-crud-container">
       <div className="base-card employee-crud-form-card">
         <h1 className="employee-crud-form-title">INFORME OS DADOS</h1>
 
-        <form>
+        <form >
           <div className="row employee-crud-inputs-container">
             <div className="col employee-crud-inputs-left-container">
 
