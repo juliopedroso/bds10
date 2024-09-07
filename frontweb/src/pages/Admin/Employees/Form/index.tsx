@@ -7,6 +7,7 @@ import { Department } from 'types/department';
 import { useEffect, useState } from 'react';
 import { requestBackend } from 'util/requests';
 import { AxiosRequestConfig } from 'axios';
+import { toast } from 'react-toastify';
 
 const Form = () => {
 
@@ -15,6 +16,24 @@ const Form = () => {
   const [selectDepartaments, setSelectDepartaments] = useState<Department[]>([]);
   const onSubmit = (formData: Employee) => {
     console.log(formData)
+
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url: '/employees',
+      data: formData,
+      withCredentials: true
+    };
+
+    requestBackend(config)
+      .then(() => {
+        toast.info('Cadastrado com sucesso')
+        history.push("/admin/employees");
+      })
+      .catch(() => {
+        toast.error('Erro ao cadastrar o produto.')
+      });
+
   }
   const handleCancel = () => {
     history.push("/admin/employees");
@@ -24,10 +43,10 @@ const Form = () => {
 
     const config: AxiosRequestConfig = {
       url: '/departments',
-     withCredentials: true
+      withCredentials: true
     };
 
-    requestBackend(config)   
+    requestBackend(config)
       .then((response) => {
         setSelectDepartaments(response.data);
       });
