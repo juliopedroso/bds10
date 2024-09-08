@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Employee } from 'types/employee';
 import { SpringPage } from 'types/vendor/spring';
+import { hasAnyRoles } from 'util/auth';
 import { requestBackend } from 'util/requests';
 
 const List = () => {
@@ -37,12 +38,13 @@ const List = () => {
 
   return (
     <>
-      <Link to="/admin/employees/create">
-        <button className="btn btn-primary text-white btn-crud-add">
-          ADICIONAR
-        </button>
-      </Link>
-
+      {hasAnyRoles(['ROLE_ADMIN']) ?
+        <Link to="/admin/employees/create" >
+          <button className="btn btn-primary text-white btn-crud-add">
+            ADICIONAR
+          </button>
+        </Link>
+        : ''}
       <div className="row">
         {
           page?.content.map(employee => (
