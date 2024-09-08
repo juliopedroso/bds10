@@ -1,31 +1,39 @@
 import './styles.css';
 
-import Pagination from 'components/Pagination';
+import { AxiosRequestConfig } from 'axios';
 import EmployeeCard from 'components/EmployeeCard';
+import Pagination from 'components/Pagination';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const employeeHardCode = { // delete
-  id: 1,
-  name: "Carlos",
-  email: "carlos@gmail.com",
-  department: {
-    id: 1,
-    name: "Sales"
-  }
-};
+import { Employee } from 'types/employee';
+import { SpringPage } from 'types/vendor/spring';
+import { requestBackend } from 'util/requests';
 
 const List = () => {
 
-  const handlePageChange = (pageNumber: number) => {
-    // to do
+  const [page, setPage] = useState<SpringPage<Employee>>();
 
+  const getEmployees = (pageNumber: number) => {
+    const config: AxiosRequestConfig = {
+      method: 'GET',
+      url: "/employees",
+      params: {
+        page: pageNumber,
+        size: 4,
+      },
+      withCredentials: true
+    };
 
-
-
-
-
-    
+    requestBackend(config)
+      .then((response) => {
+        setPage(response.data);
+      });
   };
+
+
+  useEffect(() => {
+    getEmployees(0);
+  }, []);
 
   return (
     <>
@@ -35,16 +43,22 @@ const List = () => {
         </button>
       </Link>
 
-      <EmployeeCard employee={employeeHardCode} />
-      <EmployeeCard employee={employeeHardCode} />
-      <EmployeeCard employee={employeeHardCode} />
-      <EmployeeCard employee={employeeHardCode} />
+      <div className="row">
+        {
+          page?.content.map(employee => (
+            <div className="col-sm-6 col-md-12" key={employee.id}>
+              <EmployeeCard employee={employee} ></EmployeeCard>
+            </div>
+          ))
+        }
+
+      </div>
 
       <Pagination
-        forcePage={0}
-        pageCount={1}
+        forcePage={page?.number}
+        pageCount={(page) ? page?.totalPages : 0}
         range={3}
-        onChange={handlePageChange}
+        onChange={getEmployees}
       />
     </>
   );

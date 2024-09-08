@@ -15,8 +15,6 @@ const Form = () => {
   const { register, handleSubmit, formState: { errors }, control } = useForm<Employee>();
   const [selectDepartaments, setSelectDepartaments] = useState<Department[]>([]);
   const onSubmit = (formData: Employee) => {
-    console.log(formData)
-
 
     const config: AxiosRequestConfig = {
       method: 'POST',
